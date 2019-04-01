@@ -14,7 +14,7 @@ const hunter = {
 		{ from: 'discover', label: 'Gas', cost: 70, dom: 7 }
 	],
 	income: [
-		{ source: 'Stuller', amount: 1944.8, period: 'every 2 weeks', align: '3/22/2019' }
+		{ source: 'Stuller', into: 'iberia', amount: 1944.8, period: 'every 2 weeks', align: '3/22/2019' }
 	],
 	transfers: [
 		{ from: 'iberia', to: 'simple-joint', amount: 900, period: 'every 2 weeks', align: '3/12/2019' },
@@ -43,8 +43,8 @@ const emily = {
 		{ from: 'discover', label: 'LiveKindly', cost: 14, dom: 22 }
 	],
 	income: [
-		{ source: 'Oakbourne', amount: 1000, period: 'once a month', align: '3/19/2019' },
-		{ source: 'AirBnB', amount: 35, period: 'every 3 days', align: '3/28/2019' }
+		{ source: 'Oakbourne', into: 'iberia', amount: 1000, period: 'once a month', align: '3/19/2019' },
+		{ source: 'AirBnB', into: 'iberia', amount: 35, period: 'every 3 days', align: '3/28/2019' }
 	],
 	transfers: [],
 	accounts: [

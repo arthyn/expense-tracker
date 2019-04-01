@@ -1,11 +1,20 @@
 import { h } from 'preact';
 import { Line } from 'preact-chartjs-2';
+import data from '../../data';
+import { buildBillDates, buildDates } from '../../data-transformer';
 
 import style from './style';
 
+const start = new Date(2019, 3, 1);
+const end = new Date(2019, 5, 30);
+
 const Home = () => (
 	<div class={style.home}>
-		<Line data={data} />
+		{JSON.stringify(data.map(person => ({
+			billLines: buildBillDates(person.bills, start, end),
+			incomeLines: buildDates(person.income, start, end),
+			transferLines: buildDates(person.transfers, start, end)
+		})))}
 	</div>
 );
 
