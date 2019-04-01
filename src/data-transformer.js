@@ -5,7 +5,6 @@ export function buildDates(instances, start, end) {
 	let totalLines = [];
 
 	instances.forEach(instance => {
-		debugger;
 		let dateList = buildDateList(instance.period, new Date(instance.align), start, end);
 		let lines = dateList.map(date => ({
 			date,
@@ -24,18 +23,18 @@ function buildDateList(period, alignmentDate, start, end) {
   
 	while (current.getTime() <= end.getTime()) {
 	  if (current.getTime() >= start.getTime()) {
-		list.push(current);
+			list.push(current);
 	  }
   
 	  current = getNextAlignedDate(period, current);
 	}
   
 	return list;
-  }
+}
   
-  function getNextAlignedDate(period, date) {
+function getNextAlignedDate(period, date) {
 	return chrono.parse(period, date)[0].start.date();
-  }
+}
 
 export function buildBillDates(bills, start, end) {
 	const billLines = [];	
@@ -58,6 +57,45 @@ export function buildBillDates(bills, start, end) {
 	}
 
 	return billLines;
+}
+
+export function resolveAccounts(data, start, end) {
+	let accountLines = [];
+	let accountMap = data.accounts.reduce((accounts, account) => {
+			accounts[account.id] = account;
+			return accounts;
+	}, {});
+	let current = moment(start);
+
+	while (current.isBetween(start, end, null, '[]')) {
+		let lines = [];
+		
+		lines = lines.concat(data.transferLines.filter(transfer => current.isSame(transfer.date)));
+		lines = lines.concat(data.incomeLines.filter(income => current.isSame(income.date)));
+		lines = lines.concat(data.billLines.filter(bill => current.isSame(bill.date)));
+		
+		lines.forEach(line => calculateAccounts(line, accountMap));
+
+		accountLines = accountLines.concat(Object.keys(accountMap).map(key => ({
+			date: current.toDate(),
+			...accountMap[key]
+		})));
+
+		current.add(1, 'days');
+	}
+
+	return accountLines;
+}
+
+function calculateAccounts(line, accountMap) {
+	debugger;
+	if (typeof line.from !== 'undefined') {
+		accountMap[line.from].amount -= line.amount;
+	}
+
+	if (typeof line.to !== 'undefined') {
+		accountMap[line.to].amount -= line.amount;
+	}
 }
 
 function buildAccountStatementDates(start) {
