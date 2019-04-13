@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { Line } from 'preact-chartjs-2';
 import data from '../../data';
-import { buildBillDates, buildDates, resolveAccounts } from '../../data-transformer';
+import { buildBillDates, buildDates, resolveAccounts, getGraphData } from '../../data-transformer';
 
 import style from './style';
 
@@ -13,11 +13,19 @@ const personData = data.map(person => ({
 	transferLines: buildDates(person.transfers, start, end),
 	...person
 }));
-const accounts = personData.map(data => resolveAccounts(data, start, end));
+console.log(personData);
+
+const accountsByPerson = resolveAccounts(personData, start, end);
+
+console.log(accountsByPerson);
+
+const people = accountsByPerson.map(data => getGraphData(data.accountLines, data.accountMap));
 
 const Home = () => (
 	<div class={style.home}>
-		{JSON.stringify(accounts)}
+		{people.map(person =>
+			<Line data={person} />
+		)}
 	</div>
 );
 
